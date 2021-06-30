@@ -3,19 +3,31 @@ package main;
 public class Main {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		
-		String str = "This is a text; \"And this is a quotation\"";
-		//String str = "This is a text;";
+		//Exemplo de programa
+		String str = "var1 = 30;"
+				+ "var2 = 25.5;"
+				+ "var_String = \'Hello World!\';"
+				+ "if var1 >= var2 "
+				+ 	"print varString;";
+
 		
-		//System.out.println(str.length());
-		
-		int i = 5;
-		//System.out.println(str.substring(str.indexOf("\"")+1, str.indexOf("\"", str.indexOf("\"")+1)));
-		
+		//Realizando análise léxica
 		Analyser a = new Analyser();
 		a.Analyse(str);
-		System.out.println(a.getTokenList().toString());
+		
+		
+		//Mostrando tokens
+		System.out.println("Tokens:\n");
+		
+		for(int i=0; i<a.getTokenList().size(); i++) {
+			
+			Token t = a.getTokenList().get(i);
+			System.out.println(t.getData() + " [" + t.getType() + "]");
+			
+			if(t.getType() == ETypes.FINAL)
+				System.out.println();
+		}
 	}
 
 }
