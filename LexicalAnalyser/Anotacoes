@@ -1,7 +1,0 @@
-- Primeiro vou separar a string em lexemas e colocar em tokens.
-	- String ja e uma lista, entao colocar direto nos tokens
-	
-	
-- Criar Objeto Token e entáo lista de tokens
-	- Contendo tipo do obj
-	
