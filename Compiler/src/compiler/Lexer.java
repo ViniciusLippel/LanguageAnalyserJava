@@ -1,4 +1,4 @@
-package main;
+package compiler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,13 +6,13 @@ import java.util.List;
 public class Lexer {
 	
 	private ArrayList<Token> tokenList;
-	private ArrayList<String> listCom;
+	private ArrayList<String> keywordList;
 	
 	//Constructor
-	public Lexer(List<String> listCom) {
+	public Lexer(List<String> keywordList) {
 		tokenList = new ArrayList<Token>();
-		this.listCom = new ArrayList<>(listCom.size());
-		this.listCom.addAll(listCom);
+		this.keywordList = new ArrayList<>(keywordList.size());
+		this.keywordList.addAll(keywordList);
 	}
 	
 	//Getters and Setters
@@ -26,11 +26,11 @@ public class Lexer {
 	
 
 	public ArrayList<String> getResWords() {
-		return listCom;
+		return keywordList;
 	}
 	
 	public void setResWords(ArrayList<String> resWords) {
-		this.listCom = resWords;
+		this.keywordList = resWords;
 	}
 
 	
@@ -39,7 +39,7 @@ public class Lexer {
 	public void Analyse(String str) {
 		
 		//StringBuilder para juntar símbolos que formarão um dado
-		StringBuilder data = new StringBuilder();
+		StringBuilder lexeme = new StringBuilder();
 		int i = 0;
 		
 		
@@ -52,16 +52,16 @@ public class Lexer {
 			if (isLetter(chr)) {
 				ETypes type = ETypes.IDENTIFIER;
 				while(!isSpace(chr) && !isSemicolon(chr) && !isParentheses(chr) && !isBraces(chr)) {
-					data.append(String.valueOf(chr));
+					lexeme.append(String.valueOf(chr));
 					i++;
 					chr = str.charAt(i);
 				}
 
-				if(listCom.indexOf(data.toString()) != -1)
+				if(keywordList.indexOf(lexeme.toString()) != -1)
 					type = ETypes.KEYWORD;
 				
-				this.tokenList.add(new Token(data.toString(), type));
-				data = new StringBuilder();
+				this.tokenList.add(new Token(lexeme.toString(), type));
+				lexeme = new StringBuilder();
 			}
 			
 			
@@ -71,7 +71,7 @@ public class Lexer {
 				ETypes type = ETypes.INTEGER;
 				
 				while(isNum(chr) || isPoint(chr) || isComma(chr)) {
-					data.append(String.valueOf(chr));
+					lexeme.append(String.valueOf(chr));
 
 					if((isPoint(chr) || isComma(chr)) && isNum(str.charAt(i+1)))
 						type = ETypes.FLOAT;
@@ -81,86 +81,94 @@ public class Lexer {
 					
 					//Se possuir letras após os números será nome
 					if(isLetter(chr)) {
-						data.append(String.valueOf(chr));
+						lexeme.append(String.valueOf(chr));
 						type = ETypes.IDENTIFIER;
 					}
 				}
 				
-				if(isSpace(chr) || isSemicolon(chr)) {
-					this.tokenList.add(new Token(data.toString(), type));
-					data = new StringBuilder();
+				if(isSpace(chr) || isSemicolon(chr) || isParentheses(chr) || isBraces(chr)) {
+					this.tokenList.add(new Token(lexeme.toString(), type));
+					lexeme = new StringBuilder();
 				}
 			}
 			
 			//Identificando literal (aspas duplas e simples)
 			else if (isQuote(chr)) {
 				
-				data.append(str.substring(i+1, str.indexOf("\"", i+1)));
-				this.tokenList.add(new Token(data.toString(), ETypes.LITERAL));
+				lexeme.append(str.substring(i+1, str.indexOf("\"", i+1)));
+				this.tokenList.add(new Token(lexeme.toString(), ETypes.LITERAL));
 				
-				data = new StringBuilder();
+				lexeme = new StringBuilder();
 				i = str.indexOf("\"", i+1);
 			}
 			
 			else if (isSimpleQuote(chr)) {
 				
-				data.append(str.substring(i+1, str.indexOf("\'", i+1)));
-				this.tokenList.add(new Token(data.toString(), ETypes.LITERAL));
+				lexeme.append(str.substring(i+1, str.indexOf("\'", i+1)));
+				this.tokenList.add(new Token(lexeme.toString(), ETypes.LITERAL));
 				
-				data = new StringBuilder();
+				lexeme = new StringBuilder();
 				i = str.indexOf("\'", i+1);
 			}
 			
 			//Identificando comparação
 			else if (isRelOperator(chr, str.charAt(i+1))) {
 				
-				data.append(chr);
-				data.append(str.charAt(i+1));
-				this.tokenList.add(new Token(data.toString(), ETypes.REL_OPERATOR));
+				lexeme.append(chr);
+				lexeme.append(str.charAt(i+1));
+				this.tokenList.add(new Token(lexeme.toString(), ETypes.REL_OPERATOR));
 				
-				data = new StringBuilder();
+				lexeme = new StringBuilder();
 				i++;
 			}
 			
 			else if (isAssignment(chr)) {
 				
-				data.append(chr);
-				this.tokenList.add(new Token(data.toString(), ETypes.ASSIGNMENT));
+				lexeme.append(chr);
+				this.tokenList.add(new Token(lexeme.toString(), ETypes.ASSIGNMENT));
 				
-				data = new StringBuilder();
+				lexeme = new StringBuilder();
 			}
 			
 			//Identificando operação
 			else if (isOperator(chr)) {
 				
-				data.append(chr);
-				this.tokenList.add(new Token(data.toString(), ETypes.OPERATOR));
+				lexeme.append(chr);
+				this.tokenList.add(new Token(lexeme.toString(), ETypes.OPERATOR));
 				
-				data = new StringBuilder();
+				lexeme = new StringBuilder();
 			}
 			
 			if (isParentheses(chr)) {
-				data.append(chr);
-				this.tokenList.add(new Token(data.toString(), ETypes.PARENTHESES));
+				lexeme.append(chr);
+				this.tokenList.add(new Token(lexeme.toString(), ETypes.PARENTHESES));
 				
-				data = new StringBuilder();
+				lexeme = new StringBuilder();
 			}
 			
 			if (isBraces(chr)) {
 				
-				data.append(chr);
-				this.tokenList.add(new Token(data.toString(), ETypes.BRACES));
+				lexeme.append(chr);
+				this.tokenList.add(new Token(lexeme.toString(), ETypes.BRACES));
 				
-				data = new StringBuilder();
+				lexeme = new StringBuilder();
 			}
 			
 			//
 			if (isSemicolon(chr)) {
 				
-				data.append(chr);
-				this.tokenList.add(new Token(data.toString(), ETypes.SEMICOLON));
+				lexeme.append(chr);
+				this.tokenList.add(new Token(lexeme.toString(), ETypes.SEMICOLON));
 				
-				data = new StringBuilder();
+				lexeme = new StringBuilder();
+			}
+			
+			if (isColon(chr)) {
+				
+				lexeme.append(chr);
+				this.tokenList.add(new Token(lexeme.toString(), ETypes.COLON));
+				
+				lexeme = new StringBuilder();
 			}
 			
 			i++;
@@ -184,6 +192,12 @@ public class Lexer {
 	
 	public boolean isSemicolon(char c) {
 		if (c == ';')
+			return true;
+		return false;
+	}
+	
+	public boolean isColon(char c) {
+		if (c == ':')
 			return true;
 		return false;
 	}
@@ -245,6 +259,13 @@ public class Lexer {
 	public boolean isRelOperator(char c1, char c2) {
 		String c = String.valueOf(c1)+String.valueOf(c2);
 		if(c=="==" || c=="!=" || c.equals(">=") || c=="<=")
+			return true;	
+		return false;
+	}
+	
+	public boolean isIn(char c1, char c2) {
+		String c = String.valueOf(c1)+String.valueOf(c2);
+		if(c.equalsIgnoreCase("in"))
 			return true;	
 		return false;
 	}

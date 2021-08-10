@@ -1,21 +1,21 @@
-package main;
+package compiler;
 
 public class Token {
-	String data;
+	String lexeme;
 	ETypes type;
 	
 	public Token(String data, ETypes type) {
 		super();
-		this.data = data;
+		this.lexeme = data;
 		this.type = type;
 	}
 
 	public String getData() {
-		return data;
+		return lexeme;
 	}
 
 	public void setData(String data) {
-		this.data = data;
+		this.lexeme = data;
 	}
 
 	public ETypes getType() {
@@ -30,7 +30,7 @@ public class Token {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Token [data=");
-		builder.append(data);
+		builder.append(lexeme);
 		builder.append(", type=");
 		builder.append(type);
 		builder.append("]");
