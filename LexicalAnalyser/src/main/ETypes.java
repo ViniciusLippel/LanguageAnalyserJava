@@ -1,5 +1,0 @@
-package main;
-
-public enum ETypes {
-	LITERAL, INTEIRO, REAL, NOME, COMANDO, COMPARACAO, OPERACAO, FINAL;
-}
