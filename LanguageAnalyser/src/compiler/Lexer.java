@@ -38,12 +38,12 @@ public class Lexer {
 	//Analisador
 	public void Analyse(String str) {
 		
-		//StringBuilder para juntar símbolos que formarão um dado
+		//StringBuilder para juntar símbolos que formarão um lexema
 		StringBuilder lexeme = new StringBuilder();
-		int i = 0;
 		
 		
 		//Loop percorrendo o script
+		int i = 0;
 		while (i<str.length()-1) {
 			
 			char chr = str.charAt(i);
@@ -111,7 +111,7 @@ public class Lexer {
 				i = str.indexOf("\'", i+1);
 			}
 			
-			//Identificando comparação
+			//Identificando operador relacional
 			else if (isRelOperator(chr, str.charAt(i+1))) {
 				
 				lexeme.append(chr);
