@@ -40,7 +40,7 @@ public class Parser {
 
 	public void parse() {
 		this.groupTokens();
-		this.syntaxAnalisis();
+		this.syntaxAnalysis();
 	}
 
 	public void groupTokens() {
@@ -61,7 +61,7 @@ public class Parser {
 		}
 	}
 	
-	public void syntaxAnalisis() {
+	public void syntaxAnalysis() {
 		
 		ArrayList<ArrayList<Token>> gt = this.groupTokens;
 		
